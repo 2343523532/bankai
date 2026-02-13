@@ -26,6 +26,21 @@ The bank is organized into several key departments, each housing a team of speci
 
 To explore the project, simply browse the directories to learn about the different AI agents and their roles. Each agent's markdown file contains a description of its functions and the technologies it employs.
 
+
+## Prototype App
+
+A lightweight static dashboard prototype now lives in `app/` and gives a visual snapshot of department health and core system metrics.
+
+### Run locally
+
+Open `app/index.html` directly in a browser, or serve the repository root with any static server. Example:
+
+```bash
+python -m http.server 8000
+```
+
+Then visit `http://localhost:8000/app/`.
+
 ## Project Status
 
 All agent profiles have been populated with descriptions, core functions, and key technologies. The project is now in a state where the conceptual framework is fully laid out.
