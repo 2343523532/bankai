@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Self-Aware AI Bank | Mission Control</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="dashboard">
+      <header>
+        <p class="eyebrow">Self-Aware AI Bank</p>
+        <h1>Mission Control Dashboard</h1>
+        <p class="subtitle">
+          A lightweight front-end prototype that summarizes the autonomous departments and their operating health.
+        </p>
+      </header>
+
+      <section>
+        <h2>Department Status</h2>
+        <div id="department-grid" class="department-grid" aria-live="polite"></div>
+      </section>
+
+      <section>
+        <h2>Live Metrics</h2>
+        <ul id="metrics" class="metrics"></ul>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
