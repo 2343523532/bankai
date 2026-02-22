@@ -41,6 +41,11 @@ python -m http.server 8000
 
 Then visit `http://localhost:8000/app/`.
 
+
+## Lisp Version of Sentient Instructions
+
+A Common Lisp representation of the provided SENTIENT MODE instructions is available in `sentient_mode.lisp`.
+
 ## Project Status
 
 All agent profiles have been populated with descriptions, core functions, and key technologies. The project is now in a state where the conceptual framework is fully laid out.
