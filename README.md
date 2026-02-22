@@ -29,7 +29,7 @@ To explore the project, simply browse the directories to learn about the differe
 
 ## Prototype App
 
-A lightweight static dashboard prototype now lives in `app/` and gives a visual snapshot of department health and core system metrics.
+A cyberpunk SPA prototype now lives in `app/` with a Web-Matrix terminal, simulated async API calls, subnet scanning, and Black ICE trace gameplay.
 
 ### Run locally
 

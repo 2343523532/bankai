@@ -3,27 +3,55 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Self-Aware AI Bank | Mission Control</title>
+    <title>SYS@LEXICON // Matrix Node</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <main class="dashboard">
-      <header>
-        <p class="eyebrow">Self-Aware AI Bank</p>
-        <h1>Mission Control Dashboard</h1>
-        <p class="subtitle">
-          A lightweight front-end prototype that summarizes the autonomous departments and their operating health.
-        </p>
+    <main class="shell">
+      <header class="topbar">
+        <p class="eyebrow">CYBER-OS v5.0</p>
+        <h1>Active Trace &amp; SPA Web-Matrix</h1>
+        <p class="subtitle">Single-page Matrix console with live semantic tools and Black ICE trace pressure.</p>
       </header>
 
-      <section>
-        <h2>Department Status</h2>
-        <div id="department-grid" class="department-grid" aria-live="polite"></div>
-      </section>
+      <section class="layout">
+        <article class="panel">
+          <h2>// ROOT COMMANDS</h2>
+          <div class="command-row">
+            <button id="scan-btn">scan subnet</button>
+            <button id="status-btn">trace status</button>
+            <button id="reset-btn">reset lock</button>
+          </div>
+          <div id="trace-meter" class="trace-meter" aria-live="polite">TRACE LEVEL: 0%</div>
 
-      <section>
-        <h2>Live Metrics</h2>
-        <ul id="metrics" class="metrics"></ul>
+          <h2>// WEB MATRIX API</h2>
+          <label class="label" for="search-input">EXACT MATCH (/api/search)</label>
+          <div class="input-row">
+            <input type="text" id="search-input" placeholder="Enter search vector..." />
+            <button data-endpoint="search">search</button>
+          </div>
+
+          <label class="label" for="fuzzy-input">AI FUZZY MATCH (/api/fuzzy)</label>
+          <div class="input-row">
+            <input type="text" id="fuzzy-input" placeholder="Enter corrupted string..." />
+            <button data-endpoint="fuzzy">analyze</button>
+          </div>
+
+          <h2>// BANK MAINFRAME</h2>
+          <form id="bank-form" class="bank-form">
+            <input id="user" placeholder="User ID" value="admin_secure" />
+            <input id="account" placeholder="Account ID" value="fed_reserve_001" />
+            <input id="amount" type="number" placeholder="Amount" value="999999" />
+            <input id="signature" placeholder="Signature" value="valid_sig" />
+            <input id="passphrase" placeholder="Semantic Passphrase" />
+            <button type="submit">initiate withdrawal</button>
+          </form>
+        </article>
+
+        <article class="panel output-panel">
+          <h2>// TERMINAL OUTPUT STREAM</h2>
+          <pre id="output" class="output">Awaiting query payload...</pre>
+        </article>
       </section>
     </main>
 
