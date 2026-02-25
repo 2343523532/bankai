@@ -29,7 +29,7 @@ To explore the project, simply browse the directories to learn about the differe
 
 ## Prototype App
 
-A cyberpunk SPA prototype now lives in `app/` with a Web-Matrix terminal, simulated async API calls, subnet scanning, and Black ICE trace gameplay.
+A cyberpunk SPA prototype now lives in `app/` with a Web-Matrix terminal, simulated async API calls, subnet scanning, and Black ICE trace gameplay. It now also includes a Regulated Finance Simulator panel for QR payments, payment lifecycle actions, staking, portfolio analytics, audits, growth projections, and reflective execution logging.
 
 ### Run locally
 

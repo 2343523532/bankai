@@ -11,11 +11,11 @@
       <header class="topbar">
         <p class="eyebrow">CYBER-OS v5.0</p>
         <h1>Active Trace &amp; SPA Web-Matrix</h1>
-        <p class="subtitle">Single-page Matrix console with live semantic tools and Black ICE trace pressure.</p>
+        <p class="subtitle">Single-page Matrix console with live semantic tools, Black ICE trace pressure, and a regulated finance simulator.</p>
       </header>
 
       <section class="layout">
-        <article class="panel">
+        <article class="panel controls-panel">
           <h2>// ROOT COMMANDS</h2>
           <div class="command-row">
             <button id="scan-btn">scan subnet</button>
@@ -46,6 +46,46 @@
             <input id="passphrase" placeholder="Semantic Passphrase" />
             <button type="submit">initiate withdrawal</button>
           </form>
+
+          <h2>// REGULATED FINANCE SIMULATOR</h2>
+          <div class="sim-grid">
+            <div class="sim-card">
+              <h3>QR Payment</h3>
+              <div class="input-row">
+                <input type="number" id="qr-amount" value="120" min="1" />
+                <input type="text" id="merchant-id" value="merchant_node_77" />
+                <button id="qr-btn">pay</button>
+              </div>
+            </div>
+
+            <div class="sim-card">
+              <h3>Payment Lifecycle</h3>
+              <div class="command-row">
+                <button id="auth-btn">authorize</button>
+                <button id="capture-btn">capture</button>
+                <button id="refund-btn">refund</button>
+              </div>
+              <div id="txn-status" class="sim-readout">TXN: none</div>
+            </div>
+
+            <div class="sim-card">
+              <h3>Portfolio Ops</h3>
+              <div class="command-row">
+                <button id="stake-btn">stake +6% APR</button>
+                <button id="alloc-btn">allocation</button>
+                <button id="audit-btn">audit</button>
+                <button id="growth-btn">3y projection</button>
+              </div>
+            </div>
+
+            <div class="sim-card">
+              <h3>AI Reflection</h3>
+              <div class="input-row">
+                <input type="text" id="reflection-outcome" value="qr-payment-approved" />
+                <button id="reflect-btn">reflect</button>
+              </div>
+            </div>
+          </div>
         </article>
 
         <article class="panel output-panel">

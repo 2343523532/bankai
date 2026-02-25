@@ -82,7 +82,7 @@ function typeLine(text) {
 }
 
 function runScan() {
-  typeLine('Scanning 192.168.0.x subnet...\nNode discovered: MATRIX_WEB [localhost]\nNode discovered: FED_RESERVE_MAINFRAME [fed_reserve_001]');
+  typeLine('Scanning 192.168.0.x subnet...\nNode discovered: MATRIX_WEB [localhost]\nNode discovered: FED_RESERVE_MAINFRAME [fed_reserve_001]\nNode discovered: REGULATED_AI_SETTLEMENT [finance_sim]');
 }
 
 function submitBank(event) {
@@ -115,6 +115,145 @@ function submitBank(event) {
   }
 }
 
+// Regulated AI System simulator state (JS mirror of regulated_ai_system.lisp)
+const simState = {
+  account: { id: 'cust_001', balance: 2500, currency: 'USD' },
+  card: { cardNumber: '4111-1111-1111-1111', status: 'active', limit: 900 },
+  ledger: [],
+  executionLog: [],
+  portfolio: [
+    { symbol: 'BTC', balance: 1.25 },
+    { symbol: 'ETH', balance: 24 },
+    { symbol: 'USDC', balance: 10000 },
+  ],
+  activeTxn: null,
+};
+
+function postTransaction(accountId, debit, credit) {
+  simState.ledger.unshift({ accountId, debit, credit, timestamp: Date.now() });
+}
+
+function transferFunds(amount, merchantId) {
+  if (simState.account.balance < amount) return null;
+  simState.account.balance -= amount;
+  postTransaction(simState.account.id, amount, 0);
+  postTransaction(merchantId, 0, amount);
+  return 'settled';
+}
+
+function reconcileLedger() {
+  return simState.ledger.reduce((sum, entry) => sum + (entry.credit - entry.debit), 0);
+}
+
+function generateQrPayload(amount, merchantId) {
+  return `PAY|CARD:${simState.card.cardNumber}|AMOUNT:${amount}|MERCHANT:${merchantId}`;
+}
+
+function processQrPayment() {
+  const amount = Number(document.querySelector('#qr-amount').value);
+  const merchantId = document.querySelector('#merchant-id').value.trim() || 'merchant_unknown';
+  if (simState.card.status !== 'active') {
+    typeLine('[QR] PAYMENT DECLINED: card is not active.');
+    return;
+  }
+  if (amount > simState.card.limit) {
+    typeLine(`[QR] PAYMENT DECLINED: amount ${amount} > card limit ${simState.card.limit}.`);
+    return;
+  }
+  const settled = transferFunds(amount, merchantId);
+  if (!settled) {
+    typeLine('[QR] PAYMENT DECLINED: insufficient account balance.');
+    return;
+  }
+
+  const payload = generateQrPayload(amount, merchantId);
+  const net = reconcileLedger();
+  typeLine(`[QR] PAYMENT SETTLED\nPayload: ${payload}\nBalance: ${simState.account.balance.toFixed(2)} ${simState.account.currency}\nLedger net (credit-debit): ${net.toFixed(2)}`);
+}
+
+function updateTxnReadout() {
+  const el = document.querySelector('#txn-status');
+  if (!simState.activeTxn) {
+    el.textContent = 'TXN: none';
+    return;
+  }
+  const t = simState.activeTxn;
+  el.textContent = `TXN: ${t.id} | amount ${t.amount} | status ${t.status}`;
+}
+
+function authorizePayment() {
+  const amount = Number(document.querySelector('#qr-amount').value) || 1;
+  simState.activeTxn = {
+    id: `TXN-${Math.random().toString(16).slice(2, 10).toUpperCase()}`,
+    amount,
+    status: 'authorized',
+  };
+  updateTxnReadout();
+  typeLine(`[PAYMENT] authorized ${simState.activeTxn.id} for ${amount}.`);
+}
+
+function capturePayment() {
+  if (!simState.activeTxn) {
+    typeLine('[PAYMENT] no transaction to capture.');
+    return;
+  }
+  simState.activeTxn.status = 'captured';
+  updateTxnReadout();
+  typeLine(`[PAYMENT] captured ${simState.activeTxn.id}.`);
+}
+
+function refundPayment() {
+  if (!simState.activeTxn) {
+    typeLine('[PAYMENT] no transaction to refund.');
+    return;
+  }
+  simState.activeTxn.status = 'refunded';
+  updateTxnReadout();
+  typeLine(`[PAYMENT] refunded ${simState.activeTxn.id}.`);
+}
+
+function stakeAssets(aprPercentage = 6) {
+  simState.portfolio = simState.portfolio.map((wallet) => {
+    const reward = wallet.balance * (aprPercentage / 100);
+    return { ...wallet, balance: Number((wallet.balance + reward).toFixed(6)) };
+  });
+  typeLine(`[STAKING] Applied ${aprPercentage}% APR reward across portfolio.`);
+}
+
+function portfolioAllocation() {
+  const total = simState.portfolio.reduce((sum, wallet) => sum + wallet.balance, 0);
+  const allocation = simState.portfolio.map((wallet) => ({
+    asset: wallet.symbol,
+    percentage: total > 0 ? Number(((wallet.balance / total) * 100).toFixed(4)) : 0,
+  }));
+  typeLine(`[ANALYTICS] Portfolio allocation\n${JSON.stringify(allocation, null, 2)}`);
+}
+
+function auditWalletIntegrity(threshold = 5000) {
+  const alerts = simState.portfolio
+    .filter((wallet) => wallet.balance > threshold)
+    .map((wallet) => ({
+      alert: 'High balance threshold exceeded',
+      wallet: wallet.symbol,
+      balance: wallet.balance,
+    }));
+  typeLine(`[AUDIT] Integrity check\n${JSON.stringify(alerts.length ? alerts : ['No anomalies'], null, 2)}`);
+}
+
+function projectGrowth(rate = 9, years = 3) {
+  const projected = simState.portfolio.map((wallet) => ({
+    asset: wallet.symbol,
+    projectedBalance: Number((wallet.balance * ((1 + rate / 100) ** years)).toFixed(6)),
+  }));
+  typeLine(`[FORECAST] ${years}y at ${rate}% annual growth\n${JSON.stringify(projected, null, 2)}`);
+}
+
+function reflectiveCycle() {
+  const outcome = document.querySelector('#reflection-outcome').value.trim() || 'no-outcome';
+  simState.executionLog.unshift({ timestamp: Date.now(), message: `Outcome integrated: ${outcome}` });
+  typeLine(`[REFLECTION] complete\nLatest: ${simState.executionLog[0].message}\nTotal log entries: ${simState.executionLog.length}`);
+}
+
 document.querySelectorAll('[data-endpoint]').forEach((button) => {
   button.addEventListener('click', () => renderEndpoint(button.dataset.endpoint));
 });
@@ -127,3 +266,14 @@ document.querySelector('#reset-btn').addEventListener('click', () => {
   typeLine('LOCK RESET: Test environment only.');
 });
 document.querySelector('#bank-form').addEventListener('submit', submitBank);
+document.querySelector('#qr-btn').addEventListener('click', processQrPayment);
+document.querySelector('#auth-btn').addEventListener('click', authorizePayment);
+document.querySelector('#capture-btn').addEventListener('click', capturePayment);
+document.querySelector('#refund-btn').addEventListener('click', refundPayment);
+document.querySelector('#stake-btn').addEventListener('click', () => stakeAssets(6));
+document.querySelector('#alloc-btn').addEventListener('click', portfolioAllocation);
+document.querySelector('#audit-btn').addEventListener('click', () => auditWalletIntegrity(5000));
+document.querySelector('#growth-btn').addEventListener('click', () => projectGrowth(9, 3));
+document.querySelector('#reflect-btn').addEventListener('click', reflectiveCycle);
+
+updateTxnReadout();
