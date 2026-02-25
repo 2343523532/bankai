@@ -46,6 +46,11 @@ Then visit `http://localhost:8000/app/`.
 
 A Common Lisp representation of the provided SENTIENT MODE instructions is available in `sentient_mode.lisp`.
 
+
+## Extended Regulated AI Architecture
+
+A complete Common Lisp financial architecture module is now available in `regulated_ai_system.lisp`, including reflective logging, double-entry transfers, QR payments, payment transaction lifecycle simulation, staking analytics, anomaly auditing, and growth projection functions.
+
 ## Project Status
 
 All agent profiles have been populated with descriptions, core functions, and key technologies. The project is now in a state where the conceptual framework is fully laid out.
