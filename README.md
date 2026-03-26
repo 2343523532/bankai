@@ -47,6 +47,17 @@ Then visit `http://localhost:8000/app/`.
 A Common Lisp representation of the provided SENTIENT MODE instructions is available in `sentient_mode.lisp`.
 
 
+
+## Quantum Super AI Demo (Common Lisp)
+
+A full runnable Common Lisp demo is now included at `quantum_ai.lisp`. It models an adaptive cognition cycle plus simulated SWIFT/crypto balance updates, a Luhn-valid card generator, and diagnostics across 3 execution loops.
+
+Run with:
+
+```bash
+sbcl --script quantum_ai.lisp
+```
+
 ## Extended Regulated AI Architecture
 
 A complete Common Lisp financial architecture module is now available in `regulated_ai_system.lisp`, including reflective logging, double-entry transfers, QR payments, payment transaction lifecycle simulation, staking analytics, anomaly auditing, and growth projection functions.
