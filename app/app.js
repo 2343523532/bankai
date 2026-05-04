@@ -248,6 +248,47 @@ function projectGrowth(rate = 9, years = 3) {
   typeLine(`[FORECAST] ${years}y at ${rate}% annual growth\n${JSON.stringify(projected, null, 2)}`);
 }
 
+
+function listRecentTransactions(limit = 5) {
+  const recent = simState.ledger.slice(0, limit).map((entry) => ({
+    accountId: entry.accountId,
+    debit: entry.debit,
+    credit: entry.credit,
+    isoTime: new Date(entry.timestamp).toISOString(),
+  }));
+  typeLine(`[LEDGER] Recent ${recent.length} entries
+${JSON.stringify(recent.length ? recent : ['No transactions yet'], null, 2)}`);
+}
+
+function runRiskAssessment() {
+  const totalDebits = simState.ledger.reduce((sum, entry) => sum + entry.debit, 0);
+  const utilization = simState.card.limit > 0 ? Number(((totalDebits / simState.card.limit) * 100).toFixed(2)) : 0;
+  const riskLevel = utilization >= 85 ? 'HIGH' : utilization >= 50 ? 'MEDIUM' : 'LOW';
+  typeLine(`[RISK] Card utilization ${utilization}% | level ${riskLevel}`);
+}
+
+function topUpAccount() {
+  const amount = Number(document.querySelector('#topup-amount').value);
+  if (!Number.isFinite(amount) || amount <= 0) {
+    typeLine('[TOPUP] invalid amount.');
+    return;
+  }
+  simState.account.balance += amount;
+  postTransaction(simState.account.id, 0, amount);
+  typeLine(`[TOPUP] Deposited ${amount.toFixed(2)} ${simState.account.currency}. New balance: ${simState.account.balance.toFixed(2)}.`);
+}
+
+function simulateFraudAlert() {
+  if (!simState.activeTxn) {
+    typeLine('[ALERT] no active transaction to flag.');
+    return;
+  }
+  simState.activeTxn.status = 'under_review';
+  setTrace(traceLevel + 10);
+  updateTxnReadout();
+  typeLine(`[ALERT] ${simState.activeTxn.id} flagged for manual review.`);
+}
+
 function reflectiveCycle() {
   const outcome = document.querySelector('#reflection-outcome').value.trim() || 'no-outcome';
   simState.executionLog.unshift({ timestamp: Date.now(), message: `Outcome integrated: ${outcome}` });
@@ -275,5 +316,9 @@ document.querySelector('#alloc-btn').addEventListener('click', portfolioAllocati
 document.querySelector('#audit-btn').addEventListener('click', () => auditWalletIntegrity(5000));
 document.querySelector('#growth-btn').addEventListener('click', () => projectGrowth(9, 3));
 document.querySelector('#reflect-btn').addEventListener('click', reflectiveCycle);
+document.querySelector('#ledger-btn').addEventListener('click', () => listRecentTransactions(6));
+document.querySelector('#risk-btn').addEventListener('click', runRiskAssessment);
+document.querySelector('#topup-btn').addEventListener('click', topUpAccount);
+document.querySelector('#alert-btn').addEventListener('click', simulateFraudAlert);
 
 updateTxnReadout();
