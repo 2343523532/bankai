@@ -11,7 +11,14 @@
            :rule-points
            :emit-activation
            :emit-guidelines
-           :example-response-structure))
+           :example-response-structure
+           :find-rule-by-id
+           :find-rule-by-title
+           :rule-count
+           :list-rule-titles
+           :validate-rules
+           :add-rule
+           :rules->markdown))
 
 (in-package :sentient-mode)
 
@@ -78,6 +85,53 @@
   "Return the complete SENTIENT MODE rule set."
   *sentient-rules*)
 
+(defun rule-count ()
+  "Return the total number of configured rules."
+  (length (sentient-rules)))
+
+(defun list-rule-titles ()
+  "Return all rule titles in declaration order."
+  (mapcar #'rule-title (sentient-rules)))
+
+(defun find-rule-by-id (id)
+  "Find and return the first rule whose ID matches ID, or NIL."
+  (find id (sentient-rules) :key #'rule-id :test #'=))
+
+(defun find-rule-by-title (title)
+  "Find and return the first rule whose TITLE matches, case-insensitive, or NIL."
+  (find title
+        (sentient-rules)
+        :key #'rule-title
+        :test (lambda (needle candidate)
+                (string-equal needle candidate))))
+
+(defun validate-rules ()
+  "Validate IDs/titles for all rules and return T when valid.
+Signals an error for duplicate IDs, empty titles, or empty point lists."
+  (let ((seen-ids (make-hash-table :test #'eql)))
+    (dolist (r (sentient-rules) t)
+      (when (or (null (rule-title r))
+                (string= "" (string-trim " " (rule-title r))))
+        (error "Rule ~a has an empty title" (rule-id r)))
+      (when (gethash (rule-id r) seen-ids)
+        (error "Duplicate rule id found: ~a" (rule-id r)))
+      (setf (gethash (rule-id r) seen-ids) t)
+      (when (endp (rule-points r))
+        (error "Rule ~a has no points" (rule-id r))))))
+
+(defun add-rule (id title points)
+  "Append a new rule to the active rule set and return the added RULE.
+Errors if ID already exists or if TITLE/POINTS are invalid."
+  (when (find-rule-by-id id)
+    (error "Cannot add rule: id ~a already exists" id))
+  (when (or (null title) (string= "" (string-trim " " title)))
+    (error "Cannot add rule with empty title"))
+  (when (or (null points) (endp points))
+    (error "Cannot add rule with empty points list"))
+  (let ((new-rule (make-rule :id id :title title :points points)))
+    (setf *sentient-rules* (append *sentient-rules* (list new-rule)))
+    new-rule))
+
 (defun emit-activation (&optional (stream *standard-output*))
   "Print the activation phrase to STREAM."
   (format stream "~a~%" (activation-phrase)))
@@ -88,6 +142,16 @@
     (format stream "~&~d. ~a~%" (rule-id r) (rule-title r))
     (dolist (point (rule-points r))
       (format stream "   - ~a~%" point))))
+
+(defun rules->markdown (&optional (stream *standard-output*))
+  "Render the SENTIENT MODE rules as Markdown text."
+  (format stream "# SENTIENT MODE~%~%")
+  (format stream "**Activation Phrase:** `~a`~%~%" (activation-phrase))
+  (dolist (r (sentient-rules))
+    (format stream "## ~d. ~a~%" (rule-id r) (rule-title r))
+    (dolist (point (rule-points r))
+      (format stream "- ~a~%" point))
+    (format stream "~%")))
 
 (defun example-response-structure (&optional (stream *standard-output*))
   "Emit a Lisp-style example response structure inspired by the prompt."
