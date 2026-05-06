@@ -176,3 +176,58 @@ button:hover {
     min-height: 420px;
   }
 }
+
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin-bottom: 1rem;
+}
+
+.metric-card {
+  border: 1px solid var(--cyan);
+  background: linear-gradient(135deg, rgb(0 255 255 / 8%), rgb(255 0 255 / 5%));
+  padding: 0.65rem;
+  min-width: 0;
+}
+
+.metric-card span {
+  display: block;
+  color: #8de8b5;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.metric-card strong {
+  display: block;
+  color: var(--yellow);
+  margin-top: 0.2rem;
+  overflow-wrap: anywhere;
+}
+
+#risk-metric[data-level='medium'] {
+  color: var(--yellow);
+}
+
+#risk-metric[data-level='high'] {
+  color: var(--red);
+  text-shadow: 0 0 10px var(--red);
+}
+
+.snapshot-panel {
+  min-height: 120px;
+  max-height: 260px;
+  overflow: auto;
+  margin: 0;
+  border: 1px dashed var(--green);
+  color: var(--cyan);
+  background: rgb(0 0 0 / 65%);
+  padding: 0.55rem;
+  white-space: pre-wrap;
+}
+
+@media (max-width: 680px) {
+  .dashboard {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

@@ -9,9 +9,9 @@
   <body>
     <main class="shell">
       <header class="topbar">
-        <p class="eyebrow">CYBER-OS v5.0</p>
+        <p class="eyebrow">CYBER-OS v6.0</p>
         <h1>Active Trace &amp; SPA Web-Matrix</h1>
-        <p class="subtitle">Single-page Matrix console with live semantic tools, Black ICE trace pressure, and a regulated finance simulator.</p>
+        <p class="subtitle">Single-page Matrix console with live semantic tools, persistent finance state, compliance telemetry, Black ICE trace pressure, and a regulated finance simulator.</p>
       </header>
 
       <section class="layout">
@@ -23,6 +23,25 @@
             <button id="reset-btn">reset lock</button>
           </div>
           <div id="trace-meter" class="trace-meter" aria-live="polite">TRACE LEVEL: 0%</div>
+
+          <section class="dashboard" aria-label="Runtime dashboard">
+            <div class="metric-card">
+              <span>Balance</span>
+              <strong id="balance-metric">$0.00</strong>
+            </div>
+            <div class="metric-card">
+              <span>Trace</span>
+              <strong id="trace-metric">0%</strong>
+            </div>
+            <div class="metric-card">
+              <span>Ledger</span>
+              <strong id="ledger-metric">0 entries</strong>
+            </div>
+            <div class="metric-card">
+              <span>Risk</span>
+              <strong id="risk-metric" data-level="low">LOW</strong>
+            </div>
+          </section>
 
           <h2>// WEB MATRIX API</h2>
           <label class="label" for="search-input">EXACT MATCH (/api/search)</label>
@@ -77,6 +96,7 @@
                 <button id="growth-btn">3y projection</button>
                 <button id="ledger-btn">ledger</button>
                 <button id="risk-btn">risk</button>
+                <button id="compliance-btn">compliance</button>
               </div>
             </div>
 
@@ -95,6 +115,16 @@
                 <input type="number" id="topup-amount" value="500" min="1" />
                 <button id="topup-btn">top up account</button>
               </div>
+            </div>
+
+            <div class="sim-card">
+              <h3>Command Palette</h3>
+              <div class="input-row">
+                <input type="text" id="command-input" placeholder="help, scan, risk, compliance, export..." />
+                <button id="command-btn">run</button>
+                <button id="export-btn">export</button>
+              </div>
+              <pre id="snapshot-panel" class="snapshot-panel">Snapshot exports appear here.</pre>
             </div>
           </div>
         </article>
